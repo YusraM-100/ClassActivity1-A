@@ -17,3 +17,11 @@ answers whether the change is suitable to merge. Continuous Delivery adds
 packaging and deployment to a staging environment, leaving the production
 release ready for a human to approve. Continuous Deployment goes one step
 further by releasing to production automatically after the checks pass.
+
+## Build Once, Deploy Many
+
+Each release creates one immutable Docker image identified by its version.
+That same image is promoted from staging to production instead of being
+rebuilt separately for each environment. This keeps the tested artifact
+identical across environments and makes releases easier to audit and roll
+back.
