@@ -93,3 +93,28 @@ jobs:
     steps:
       - name: Check staging health endpoint
         run: curl --fail --retry 10 --retry-delay 5 http://${{ secrets.STAGING_HOST }}:5000/health
+
+  deploy-production:
+    name: Deploy production
+    needs:
+      - build
+      - smoke-test
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Deploy image to production server
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          script_stop: true
+          script: |
+            docker pull ghcr.io/yusram-100/classactivity1-a:${{ needs.build.outputs.version }}
+            docker rm -f mlops-api 2>/dev/null || true
+            docker run -d \
+              --name mlops-api \
+              --restart unless-stopped \
+              -p 5000:5000 \
+              ghcr.io/yusram-100/classactivity1-a:${{ needs.build.outputs.version }}
