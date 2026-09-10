@@ -1,1 +1,12 @@
-# Container definition is added in Step 5.
+FROM python:3.13-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app.py VERSION ./
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
