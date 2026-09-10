@@ -25,3 +25,13 @@ That same image is promoted from staging to production instead of being
 rebuilt separately for each environment. This keeps the tested artifact
 identical across environments and makes releases easier to audit and roll
 back.
+
+## Environment Setup
+
+The CD workflow uses GitHub-hosted runners to simulate staging and production,
+so this classroom version does not require SSH server secrets. The staging
+environment runs the published image and checks `/health` before the
+production environment becomes available. Configure `production` with a
+required reviewer to enforce manual approval. The runner-based containers are
+temporary; a real deployment can later replace these steps with SSH secrets
+and a persistent server.
